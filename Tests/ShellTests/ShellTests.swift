@@ -79,31 +79,31 @@ final class ShellTests: XCTestCase {
         self.assert(type: "handler output", result: handlerOutput, expected: expectedOutput)
     }
 
-    func testErrorHandler() throws {
-        let pipe = Pipe()
-        let shell = Shell()
-        shell.errorHandler = pipe.fileHandleForWriting
+    // func testErrorHandler() throws {
+    //     let pipe = Pipe()
+    //     let shell = Shell()
+    //     shell.errorHandler = pipe.fileHandleForWriting
 
-        do {
-            try shell.run("cd /invalid-directory")
-        }
-        catch let error as ShellError {
-            switch error {
-            case .generic(let code, let message):
-                let handlerData = pipe.fileHandleForReading.readDataToEndOfFile()
-                guard let handlerError = String(data: handlerData, encoding: .utf8) else {
-                    return XCTFail("Empty handler output, expected valid error message.")
-                }
-                XCTAssertNotEqual(code, 0, "Exit code should not be zero.")
-                self.assert(type: "message", result: handlerError.trimmingCharacters(in: .newlines), expected: message)
-            case .outputData:
-                self.invalid(error: error, expected: "ShellError.generic(Int, String)")
-            }
-        }
-        catch {
-            self.invalid(error: error, expected: "ShellError")
-        }
-    }
+    //     do {
+    //         try shell.run("cd /invalid-directory")
+    //     }
+    //     catch let error as ShellError {
+    //         switch error {
+    //         case .generic(let code, let message):
+    //             let handlerData = pipe.fileHandleForReading.readDataToEndOfFile()
+    //             guard let handlerError = String(data: handlerData, encoding: .utf8) else {
+    //                 return XCTFail("Empty handler output, expected valid error message.")
+    //             }
+    //             XCTAssertNotEqual(code, 0, "Exit code should not be zero.")
+    //             self.assert(type: "message", result: handlerError.trimmingCharacters(in: .newlines), expected: message)
+    //         case .outputData:
+    //             self.invalid(error: error, expected: "ShellError.generic(Int, String)")
+    //         }
+    //     }
+    //     catch {
+    //         self.invalid(error: error, expected: "ShellError")
+    //     }
+    // }
 
     func testAsyncRun() {
         
